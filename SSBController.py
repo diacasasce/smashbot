@@ -6,56 +6,53 @@ import os
 import platform
 
 class SSBController:
-  def __init__(self, console,port, controller_name):
+  def __init__(self, console,port):
     self.console = console
     self.controller = melee.Controller(console=console,
                                        port=port,
                                        type=melee.ControllerType.GCN_ADAPTER)
-    self.setup_keyboard_controller(port, controller_name)
+    self.setup_keyboard_controller(port)
 
-  def setup_keyboard_controller ( self , port, controller_name ):
+  def setup_keyboard_controller ( self , port ):
     print("Setting up keyboard controller for port " + str(port))
     # pipes_path = self.console.get_dolphin_pipes_path(port)
     # #Reads in dolphin's controller config file
     controller_config_path = self.console._get_dolphin_config_path() + "GCPadNew.ini"
     config = configparser.ConfigParser()
     config.read(controller_config_path)
+    isWindows = platform.system() == "Windows"
+    print(platform.system())
 
     # add keyboard Controller
     section = "GCPad" + str(port)
     if not config.has_section(section):
       config.add_section(section)
-    config.set(section, 'Device', controller_name)
-    config.set(section, 'Buttons/A', 'SPACE')
-    config.set(section, 'Buttons/B', 'LSHIFT')
-    config.set(section, 'Buttons/X', 'RSHIFT')
-    config.set(section, 'Buttons/Y', 'LMENU')
-    config.set(section, 'Buttons/Z', 'Button Z')
-    config.set(section, 'Buttons/L', 'Button L')
-    config.set(section, 'Buttons/R', 'Button R')
+    config.set(section, 'Device','DInput/0/Keyboard Mouse' if isWindows else 'Quartz/0/Keyboard & Mouse')
+    config.set(section, 'Buttons/A', 'X')
+    config.set(section, 'Buttons/B', 'C')
+    config.set(section, 'Buttons/X', 'Z')
+    config.set(section, 'Buttons/Y', 'V')
+    config.set(section, 'Buttons/Z', 'SPACE' if isWindows else 'Space')
+    config.set(section, 'Buttons/L', 'Q')
+    config.set(section, 'Buttons/R', 'E')
     config.set(section, 'Buttons/Threshold', '50.00000000000000')
-    config.set(section, 'Main Stick/Up', 'W')
-    config.set(section, 'Main Stick/Down', 'S')
-    config.set(section, 'Main Stick/Left', 'A')
-    config.set(section, 'Main Stick/Right', 'D')
-    config.set(section, 'Triggers/L', 'Button L')
-    config.set(section, 'Triggers/R', 'Button R')
-    config.set(section, 'Main Stick/Modifier', 'Shift_L')
-    config.set(section, 'Main Stick/Modifier/Range', '50.000000000000000')
+    config.set(section, 'Main Stick/Up', 'UP' if isWindows else 'Up Arrow')
+    config.set(section, 'Main Stick/Down', 'DOWN' if isWindows else 'Down Arrow')
+    config.set(section, 'Main Stick/Left', 'LEFT' if isWindows else 'Left Arrow')
+    config.set(section, 'Main Stick/Right', 'RIGHT' if isWindows else 'Right Arrow')
+    config.set(section, 'Triggers/L', 'Q')
+    config.set(section, 'Triggers/R', 'E')
     config.set(section, 'Main Stick/Radius', '100.000000000000000')
-    config.set(section, 'D-Pad/Up', 'up')
-    config.set(section, 'D-Pad/Down', 'DOWN')
-    config.set(section, 'D-Pad/Left', 'LEFT')
-    config.set(section, 'D-Pad/Right', 'RIGHT')
-    config.set(section, 'Buttons/Start', 'return')
-    config.set(section, 'C-Stick/Up', 'Axis C Y +')
-    config.set(section, 'C-Stick/Down', 'Axis C Y -')
-    config.set(section, 'C-Stick/Left', 'Axis C X -')
-    config.set(section, 'C-Stick/Right', 'Axis C X +')
+    config.set(section, 'D-Pad/Up', 'I')
+    config.set(section, 'D-Pad/Down', 'K')
+    config.set(section, 'D-Pad/Left', 'J')
+    config.set(section, 'D-Pad/Right', 'L')
+    config.set(section, 'Buttons/Start', 'RETURN' if isWindows else 'Return')
+    config.set(section, 'C-Stick/Up', 'W')
+    config.set(section, 'C-Stick/Down', 'S')
+    config.set(section, 'C-Stick/Left', 'A')
+    config.set(section, 'C-Stick/Right', 'S')
     config.set(section, 'C-Stick/Radius', '100.000000000000000')
-    config.set(section, 'Triggers/L-Analog', 'Axis L -+')
-    config.set(section, 'Triggers/R-Analog', 'Axis R -+')
-    config.set(section, 'Triggers/Threshold', '90.00000000000000')
     with open(controller_config_path, 'w') as configfile:
       config.write(configfile)
     dolphin_config_path = self.console._get_dolphin_config_path() + "Dolphin.ini"

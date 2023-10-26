@@ -5,6 +5,7 @@ import sys
 import melee
 import random
 import os
+import platform
 from dotenv import load_dotenv
 
 # 
@@ -15,7 +16,6 @@ load_dotenv()
 
 Dolphin_executable_path = os.getenv("DOLPHIN_EXEC_PATH")
 ISO_Path = os.getenv("ISO_PATH")
-keyboard_address = os.getenv("KEYBOARD_ADDRESS")
 
 
 
@@ -45,7 +45,7 @@ bot1 = bot.Bot(1, melee.Character.FOX, 0, console)
 # bot2 = bot.Bot(2, melee.Character.FOX, 0, console)
 #   Add a controller object if oyu want to use a physical controller
 print("Connecting to keyboard controller...")
-human_controller = SSBController.SSBController(console,2, keyboard_address)
+human_controller = SSBController.SSBController(console,2)
 
 #instantiate each object
 
@@ -58,7 +58,7 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 # Run the console
-console.run()
+console.run(iso_path=ISO_Path)
 
 # Connect to the console
 print("Connecting to console...")
