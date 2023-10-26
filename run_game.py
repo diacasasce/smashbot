@@ -3,9 +3,8 @@ import argparse
 import signal
 import sys
 import melee
-import random
+
 import os
-import platform
 from dotenv import load_dotenv
 
 # 
@@ -41,13 +40,19 @@ console = melee.Console(path=Dolphin_executable_path,
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
 bot1 = bot.Bot(1, melee.Character.FOX, 0, console)
-
-# bot2 = bot.Bot(2, melee.Character.FOX, 0, console)
+# you can add additional bot agents
+# be sure to keep it at maximum 4 players over all (bots and keyboard)
+# to add them just create a new class instance like this:
+# bot2 = bot.Bot( [player port ], [player character], 0, console)
 #   Add a controller object if oyu want to use a physical controller
 print("Connecting to keyboard controller...")
+# if you want to use the keboard to play leave 
+# the following line uncommented to play in port 2
 human_controller = SSBController.SSBController(console,2)
 
-#instantiate each object
+# be sure to check the maximum player instances should be 4 
+# and each instance should have a different port assign to it
+
 
 # This isn't necessary, but makes it so that Dolphin will get killed when you ^C
 def signal_handler(sig, frame):
@@ -75,6 +80,7 @@ print("Connecting controller to console...")
 if not bot1.connect():
     print("ERROR: Failed to connect the Bot to port 1.")
     sys.exit(-1)
+# if additional bots are added, connect them here the same way as above
 
 
 print("Controller connected")
@@ -96,6 +102,7 @@ while True:
     if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
         ## move function of each bot 
         bot1.play(gamestate)
+        # if additional bots are added, call their play function here the same way as above
 
     else:
         # select bot player
@@ -107,11 +114,4 @@ while True:
                                             costume=bot1.costume,
                                             autostart=True,
                                             swag=False)
-        # melee.MenuHelper.menu_helper_simple(gamestate,
-        #                                     bot2.controller,
-        #                                     bot2.character,
-        #                                     melee.Stage.RANDOM_STAGE,
-        #                                     '',
-        #                                     costume=bot2.costume,
-        #                                     autostart=True,
-        #                                     swag=False)        
+        # if additional bots are added, select them here the same way as above
