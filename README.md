@@ -5,6 +5,7 @@ Follow these steps to install and run the bot for playing Super Smash Bros. Mele
 ## Step 1: Slippi Launcher
 
 Download and install the Slippi Launcher from [slippi.gg](https://slippi.gg).
+when installing the slippi launcher, there is no need to install de gamecube adapter drivers drivers, once installed run the slippi launcher. ther is no need to create an account so you can skipp the login- signin step.
 
 ## Step 2: Download ISO Image
 
@@ -18,19 +19,22 @@ Replace the `GALE01r2.ini` Gecko code file in your Slippi Dolphin with the one p
 
 ### Notes:
 
-you can check the files location opening slippi launcher, going to settings, and clicking on the "netplay" tab under Dolphin settings and hitting the `open settings folder` button
+you can check the files location opening slippi launcher, going to settings, and clicking on the "netplay" tab under Dolphin settings and hitting the `open settings folder` button check this file location
+
+on windows the File is located in the settings folder that you opened under the GameSettings folder, in the Sys directory, i.e. `C:\Users\user\AppData\Roaming\Slippi Launcher\netplay\Slippi Dolphin\Sys\GameSettings\GALE01r2.ini`
 
 on Mac the location of this files is inside the `Slippi Dolphin.app` package, that is located in the `netplay` folder inside the `slippi launcher` folder inside the `Application support` folder, i.e. `/Library/Application Support/Slippi Launcher/netplay/Slippi Dolphin.app/Contents/Resources/GameSettings`, either in the root directory or the user directory
 
-on windows is elsewere
-
-to check the location of this file, open the Slippi Dolphin Launcher, go to settings, and click on the "netplay" tab under Dolphin settings
+to check the location of this file, open the Slippi Dolphin Launcher, go to settings, and click on the "netplay" tab under Dolphin settings, then click on the `open settings folder` button. in there you can find the location of the slippidolphin app and the `GALE01r2.ini` file
 
 ## Step 4: Create a .env File Set Environment Variables
 
-Create a `.env` file to store your environment variables and set the following environment variables:
+Create or modify the `.env` file to store your environment variables inside this repository and set the following environment variables:
 
 - `DOLPHIN_EXEC_PATH` to your Slippi Dolphin executable path.
+  for windows this is the same as the settings folder opened in the step #3 i.e. `C:\Users\user\AppData\Roaming\Slippi Launcher\netplay`
+  for mac this is the same as the `netplay` folder used in the step #3 i.e. `/Library/Application Support/Slippi Launcher/netplay/Slippi Dolphin.app`
+
 - `ISO_PATH` to the location of your game's `.ciso` file.
 
 ## Step 5: Install libmelee
@@ -38,7 +42,7 @@ Create a `.env` file to store your environment variables and set the following e
 Install the `libmelee` library by running the following command:
 
 ```bash
-   pip install libmelee
+   pip install melee
 ```
 
 ## Step 6: Install dotenv
@@ -61,9 +65,9 @@ Run the game by running the following command:
 
 If you want to play against the bot, you can set up a keyboard controller.
 
-###### Note: there is no Need to install GC adapter drivers for this to work
+###### Note: there is no Need to install GC adapter drivers for this to work.
 
-The button mapping configuration can be found in the `run_game` script and is based on the provided image.
+The button mapping configuration can be found in the `run_game.py` script and is based on the provided image.
 
 ![controlmappingg](./ControlMapping.png)
 
@@ -73,7 +77,7 @@ The button mapping configuration can be found in the `run_game` script and is ba
 
 for the developing your bot you should create a new script and import the `bot.py` script, then create a new class that inherits from the `Bot` class and override the `play` method to implement your bot logic.
 
-for additional information on the libmellee options be sure to check the [libmelee documentation](https://libmelee.readthedocs.io/)
+for additional information on the libmelee options be sure to check the [libmelee documentation](https://libmelee.readthedocs.io/)
 
 That's it! You should now have the environment set up and configured to play Super Smash Bros. Melee with Slippi, and run the bot.
 
