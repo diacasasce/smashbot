@@ -30,6 +30,7 @@ parser = argparse.ArgumentParser(description='Example of libmelee in action')
 #   Through this object, we can get "GameState" objects per-frame so that your
 #       bot can actually "see" what's happening in the game
 console = melee.Console(path=Dolphin_executable_path,
+                        dolphin_home_path=Dolphin_executable_path,
                         fullscreen=False,
                         blocking_input=True
                         )
