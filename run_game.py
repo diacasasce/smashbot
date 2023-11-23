@@ -11,6 +11,14 @@ from dotenv import load_dotenv
 # 
 
 from bot import Bot
+# bots imports
+import bot_impl # seb Gomez - ?
+# import pikachuBot # juan cruz - pikachu
+# import dfgobot # diego garcia - Fox
+import my_bot # juan Castro - Fox
+# import opbot # Cali - Fox
+
+
 
 import SSBController
 
@@ -43,8 +51,8 @@ console = melee.Console(path=Dolphin_executable_path,
 #   Your controller is your way of sending button presses to the game, whether
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
-bot1 = Bot(1, melee.Character.FOX, 0, console)
-bot2 = Bot(2, melee.Character.SAMUS, 0, console)
+bot1 = my_bot.MyCustomBot(1, melee.Character.FOX, 0, console)
+bot2 = bot_impl.BotImpl(2, melee.Character.FOX, 0, console)
 # you can add additional bot agents
 # be sure to keep it at maximum 4 players over all (bots and keyboard)
 # to add them just create a new class instance like this:
