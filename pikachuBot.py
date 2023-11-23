@@ -25,7 +25,7 @@ class  Bot:
     size_stage = 50
 
     # Print the positions to the console
-    print(f"My X={bot_position.x}, Y={bot_position.y} pika: X={opponent_position.x}, Y={opponent_position.y} game distance {gamestate.distance}")
+    # print(f"My X={bot_position.x}, Y={bot_position.y} pika: X={opponent_position.x}, Y={opponent_position.y} game distance {gamestate.distance}")
 
     # dont jump of the stage!
     if abs(bot_position.x) > size_stage:
@@ -41,7 +41,7 @@ class  Bot:
       control.release_button(melee.enums.Button.BUTTON_B)
 
       if bot.y < opponent.y and bot.on_ground:
-        print(f"jump!")
+        # print(f"jump!")
         control.press_button(melee.enums.Button.BUTTON_X)
       else:
         control.release_button(melee.enums.Button.BUTTON_X)
