@@ -39,7 +39,7 @@ console = melee.Console(path=Dolphin_executable_path,
 #   Your controller is your way of sending button presses to the game, whether
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
-bot1 = bot.Bot(1, melee.Character.FOX, 0, console)
+bot1 = bot.Bot(1, melee.Character.PIKACHU, 0, console)
 # you can add additional bot agents
 # be sure to keep it at maximum 4 players over all (bots and keyboard)
 # to add them just create a new class instance like this:

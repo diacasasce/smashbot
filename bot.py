@@ -17,19 +17,43 @@ class  Bot:
     return self.controller.connect()
   
   def play(self, gamestate):
-    if gamestate.distance < 5:
-      self.controller.press_button(melee.enums.Button.BUTTON_B)
-      self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0)
-    else:
-      randX = random.uniform(0,1)
-      randY = random.uniform(0,1)
-      randJ = random.uniform(0,1) > 0.5
-      
-      self.controller.release_button(melee.enums.Button.BUTTON_B)
-      if randJ:
-        self.controller.press_button(melee.enums.Button.BUTTON_X)
-      else:
-        self.controller.release_button(melee.enums.Button.BUTTON_X)
+    control = self.controller  # Local variable for easier access
+    bot = gamestate.players[self.port]
+    bot_position = bot.position
+    opponent = gamestate.players[2]
+    opponent_position = opponent.position
+    size_stage = 50
 
-      self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, randX, randJ)
+    # Print the positions to the console
+    print(f"My X={bot_position.x}, Y={bot_position.y} pika: X={opponent_position.x}, Y={opponent_position.y} game distance {gamestate.distance}")
+
+    # dont jump of the stage!
+    if abs(bot_position.x) > size_stage:
+      direction = bot_position.x > 0
+      control.tilt_analog(melee.enums.Button.BUTTON_MAIN, int(not direction), 0.5)
+      if not bot.on_ground:
+        control.press_button(melee.enums.Button.BUTTON_X)
+    else:
+      # follow the opponent
+      follow = bot.x < opponent.x
+      control.tilt_analog(melee.enums.Button.BUTTON_MAIN, int(follow), 0.5)
+
+      control.release_button(melee.enums.Button.BUTTON_B)
+
+      if bot.y < opponent.y and bot.on_ground:
+        print(f"jump!")
+        control.press_button(melee.enums.Button.BUTTON_X)
+      else:
+        control.release_button(melee.enums.Button.BUTTON_X)
+
+      if gamestate.distance < 15 and gamestate.distance > 5:
+        control.press_button(melee.enums.Button.BUTTON_B)
+        control.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0.5)
+      if gamestate.distance < 5:
+        control.press_button(melee.enums.Button.BUTTON_A)
+        control.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0.5)
+
+
+
+
       
