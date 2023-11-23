@@ -1,6 +1,11 @@
 # Bot Installation and Setup Guide
 
 Follow these steps to install and run the bot for playing Super Smash Bros. Melee with Slippi:
+this should be done after cloning this repo on your machine
+
+## requirements
+
+- python 3.10.0
 
 ## Step 1: Slippi Launcher
 

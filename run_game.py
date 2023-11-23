@@ -2,13 +2,14 @@
 import argparse
 import signal
 import sys
+from time import sleep
 import melee
 
 import os
 from dotenv import load_dotenv
 
 # 
-import bot
+from bot import Bot
 import SSBController
 
 load_dotenv() 
@@ -30,6 +31,7 @@ parser = argparse.ArgumentParser(description='Example of libmelee in action')
 #   Through this object, we can get "GameState" objects per-frame so that your
 #       bot can actually "see" what's happening in the game
 console = melee.Console(path=Dolphin_executable_path,
+                        dolphin_home_path=Dolphin_executable_path,
                         fullscreen=False,
                         blocking_input=True
                         )
@@ -39,7 +41,8 @@ console = melee.Console(path=Dolphin_executable_path,
 #   Your controller is your way of sending button presses to the game, whether
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
-bot1 = bot.Bot(1, melee.Character.PIKACHU, 0, console)
+bot1 = Bot(1, melee.Character.FOX, 0, console)
+bot2 = Bot(2, melee.Character.SAMUS, 0, console)
 # you can add additional bot agents
 # be sure to keep it at maximum 4 players over all (bots and keyboard)
 # to add them just create a new class instance like this:
@@ -48,7 +51,7 @@ bot1 = bot.Bot(1, melee.Character.PIKACHU, 0, console)
 print("Connecting to keyboard controller...")
 # if you want to use the keboard to play leave 
 # the following line uncommented to play in port 2
-human_controller = SSBController.SSBController(console,2)
+# human_controller = SSBController.SSBController(console,2)
 
 # be sure to check the maximum player instances should be 4 
 # and each instance should have a different port assign to it
@@ -67,10 +70,13 @@ console.run(iso_path=ISO_Path)
 
 # Connect to the console
 print("Connecting to console...")
+sleep(5)
 if not console.connect():
+    console.stop()
     print("ERROR: Failed to connect to the console.")
     sys.exit(-1)
 print("Console connected")
+sleep(5)
 
 # Plug our controller in
 #   Due to how named pipes work, this has to come AFTER running dolphin
@@ -80,13 +86,17 @@ print("Connecting controller to console...")
 if not bot1.connect():
     print("ERROR: Failed to connect the Bot to port 1.")
     sys.exit(-1)
-# if additional bots are added, connect them here the same way as above
+if not bot2.connect():
+    print("ERROR: Failed to connect the Bot to port 2.")
+    sys.exit(-1)
 
+# if additional bots are added, connect them here the same way as above
 
 print("Controller connected")
 
 costume = 0
 framedata = melee.framedata.FrameData()
+menu = ''
 
 # Main loop
 while True:
@@ -99,11 +109,32 @@ while True:
     if console.processingtime * 1000 > 12:
         print("WARNING: Last frame took " + str(console.processingtime*1000) + "ms to process.")
     # What menu are we in?
+    # on menu change 
+    if(gamestate.menu_state != menu):
+        print("New menu state: " + str(gamestate.menu_state))
+        match gamestate.menu_state:
+            case melee.Menu.CHARACTER_SELECT:
+                print("Character select")
+            case melee.Menu.IN_GAME:
+                print("Game started!")
+            case melee.Menu.MAIN_MENU:
+                print("Main menu")
+            case melee.Menu.POSTGAME_SCORES:
+                print("Score screen")
+            case melee.Menu.SLIPPI_ONLINE_CSS:
+                print("Slippi Online CSS")
+            case melee.Menu.STAGE_SELECT:
+                print("Stage select")
+            case melee.Menu.SUDDEN_DEATH:
+                print("Sudden Death")
+            case _:
+                print("Unknown menu state", gamestate.menu_state)
+        menu = gamestate.menu_state 
     if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
         ## move function of each bot 
         bot1.play(gamestate)
+        bot2.play(gamestate)
         # if additional bots are added, call their play function here the same way as above
-
     else:
         # select bot player
         melee.MenuHelper.menu_helper_simple(gamestate,
@@ -112,6 +143,14 @@ while True:
                                             melee.Stage.RANDOM_STAGE,
                                             '',
                                             costume=bot1.costume,
-                                            autostart=True,
+                                            autostart=False,
+                                            swag=False)
+        melee.MenuHelper.menu_helper_simple(gamestate,
+                                            bot2.controller,
+                                            bot2.character,
+                                            melee.Stage.RANDOM_STAGE,
+                                            '',
+                                            costume=bot2.costume,
+                                            autostart=False,
                                             swag=False)
         # if additional bots are added, select them here the same way as above
