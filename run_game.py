@@ -51,15 +51,16 @@ console = melee.Console(path=Dolphin_executable_path,
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
 # torunament
+
 # P1
-bot1 = my_bot.MyCustomBot(1, melee.Character.FOX, 0, console)   
-bot2 = bot_impl.BotImpl(2, melee.Character.FOX, 0, console)
+# bot1 = my_bot.MyCustomBot(1, melee.Character.FOX, 0, console)   
+# bot2 = bot_impl.BotImpl(2, melee.Character.FOX, 0, console)
 # WP1 = bot1
 # LP1 = bot2
 
-# P2
-# bot1 = dfgobot.Bot(1, melee.Character.FOX, 0, console)
-# bot2= pikachuBot.Bot(2, melee.Character.PIKACHU, 0, console)
+# P2t
+bot1 = dfgobot.Bot(1, melee.Character.FOX, 0, console)
+bot2= pikachuBot.Bot(2, melee.Character.PIKACHU, 0, console)
 # WP2 = bot1
 # LP2 = bot2
 
@@ -149,7 +150,10 @@ print("Controller connected")
 costume = 0
 framedata = melee.framedata.FrameData()
 menu = ''
-
+cycle = 0
+inGame = False
+matchNum = 0
+maxMatches = 1
 # Main loop
 while True:
     # "step" to the next frame
@@ -183,11 +187,22 @@ while True:
                 print("Unknown menu state", gamestate.menu_state)
         menu = gamestate.menu_state 
     if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
+        if not inGame:
+            print("Game started!")
+            inGame = True
         ## move function of each bot 
         bot1.play(gamestate)
         bot2.play(gamestate)
         # if additional bots are added, call their play function here the same way as above
     else:
+        if inGame:
+            print("Game ended!")
+            inGame = False
+            if matchNum == maxMatches:
+                console.stop()
+                sys.exit(0)
+            matchNum += 1
+            sleep(10)    
         # select bot player
         melee.MenuHelper.menu_helper_simple(gamestate,
                                             bot1.controller,
@@ -205,4 +220,13 @@ while True:
                                             costume=bot2.costume,
                                             autostart=False,
                                             swag=False)
+        if cycle > 200:
+            bot1.controller.press_button(melee.enums.Button.BUTTON_START)
+        if gamestate.menu_state == melee.Menu.CHARACTER_SELECT:
+            cycle += 1
+        if gamestate.menu_state == melee.Menu.STAGE_SELECT:
+            cycle = 0
+            bot1.controller.release_button(melee.enums.Button.BUTTON_START)
+
+
         # if additional bots are added, select them here the same way as above
