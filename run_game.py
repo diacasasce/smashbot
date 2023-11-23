@@ -58,7 +58,7 @@ console = melee.Console(path=Dolphin_executable_path,
 # WP1 = bot1
 # LP1 = bot2
 
-# P2t
+# P2
 bot1 = dfgobot.Bot(1, melee.Character.FOX, 0, console)
 bot2= pikachuBot.Bot(2, melee.Character.PIKACHU, 0, console)
 # WP2 = bot1
@@ -198,10 +198,11 @@ while True:
         if inGame:
             print("Game ended!")
             inGame = False
+            matchNum += 1
             if matchNum == maxMatches:
                 console.stop()
                 sys.exit(0)
-            matchNum += 1
+
             sleep(10)    
         # select bot player
         melee.MenuHelper.menu_helper_simple(gamestate,
