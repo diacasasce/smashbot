@@ -9,8 +9,15 @@ import os
 from dotenv import load_dotenv
 
 # 
-
+#bot imports
 from bot import Bot
+import opbot # Cali - FOX
+import bot_impl # Seb Gomez - ?
+import dfgobot # DFGO - Fox
+import pikachuBot # Juan Cruz - Pikachu 
+import my_bot # Juan castro - Fox
+
+
 
 import SSBController
 
@@ -43,8 +50,51 @@ console = melee.Console(path=Dolphin_executable_path,
 #   Your controller is your way of sending button presses to the game, whether
 #   virtual or physical.
 #   Add a Bot object for each port you want to use
-bot1 = Bot(1, melee.Character.FOX, 0, console)
-bot2 = Bot(2, melee.Character.SAMUS, 0, console)
+# torunament
+# P1
+bot1 = my_bot.MyCustomBot(1, melee.Character.FOX, 0, console)   
+bot2 = bot_impl.BotImpl(2, melee.Character.FOX, 0, console)
+# WP1 = bot1
+# LP1 = bot2
+
+# P2
+# bot1 = dfgobot.Bot(1, melee.Character.FOX, 0, console)
+# bot2= pikachuBot.Bot(2, melee.Character.PIKACHU, 0, console)
+# WP2 = bot1
+# LP2 = bot2
+
+
+# P3
+# bot1 = opbot.Bot(1, melee.Character.FOX, 0, console)
+# bot2 = WP1
+# WP3 = bot1
+# LP3 = bot2
+
+#P4 - LB
+# bot1 = LP1
+# bot2 = LP2
+# WP4 = bot1
+
+# P5 - LB
+# bot1 = LP3
+# bot2 = WP4
+# WP5 = bot1
+
+# P6
+# bot1 = WP2
+# bot2 = WP3
+# WP6 = bot1
+# LP6 = bot2
+
+#P7 -LB
+# bot1 = LP6
+# bot2 = WP5
+# WP7 = bot1
+
+#P8  FULL
+# bot1 = WP6
+# bot2 = WP7
+
 # you can add additional bot agents
 # be sure to keep it at maximum 4 players over all (bots and keyboard)
 # to add them just create a new class instance like this:
