@@ -1,6 +1,7 @@
 ## import 
 import melee
 import random
+import time
 ## create bot class
 
 class  Bot:
@@ -17,19 +18,24 @@ class  Bot:
     return self.controller.connect()
   
   def play(self, gamestate):
-    if gamestate.distance < 5:
-      self.controller.press_button(melee.enums.Button.BUTTON_B)
-      self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0)
+    
+    if gamestate.player[1].y > gamestate.player[2].y or gamestate.player[2].stock == 0:
+        self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0)
+        
+    elif gamestate.distance < 3:
+        self.controller.press_button(melee.enums.Button.BUTTON_B)
+        self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0)
     else:
-      randX = random.uniform(0,1)
-      randY = random.uniform(0,1)
-      randJ = random.uniform(0,1) > 0.5
-      
-      self.controller.release_button(melee.enums.Button.BUTTON_B)
-      if randJ:
-        self.controller.press_button(melee.enums.Button.BUTTON_X)
-      else:
-        self.controller.release_button(melee.enums.Button.BUTTON_X)
-
-      self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, randX, randJ)
-      
+        left = gamestate.player[1].x < gamestate.player[2].x
+        self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, int(left), 0.5)
+        self.controller.release_button(melee.enums.Button.BUTTON_B)
+        
+        if gamestate.player[1].y < gamestate.player[2].y:
+          self.controller.press_button(melee.enums.Button.BUTTON_X)
+          self.controller.tilt_analog(melee.enums.Button.BUTTON_MAIN, 0.5, 0)
+          self.controller.press_button(melee.enums.Button.BUTTON_B)
+        else:
+          self.controller.release_button(melee.enums.Button.BUTTON_X)
+          
+        self.controller.release_button(melee.enums.Button.BUTTON_B)
+        
